@@ -1,31 +1,41 @@
 import { SlashCommandBuilder } from 'discord.js';
+import { downloadVideo } from '../services/external-api.js';
 import { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, AudioPlayerStatus, entersState, getVoiceConnection } from '@discordjs/voice';
 
-let TestCommand = {
+let PingCommand = {
     data: new SlashCommandBuilder()
-        .setName('test')
-        .setDescription('Test ping!'),
+        .setName('ping')
+        .setDescription('To verify if everything is working.'),
     execute: async (interaction) => {
-        await interaction.reply('Hello world!');
+        await interaction.reply('Oh my shoulder!');
     }
 };
 
-let HeroicCommand = {
+let PlayMusicCommand = {
     data: new SlashCommandBuilder()
-        .setName('heroic')
-        .setDescription('Heroic responce!'),
+        .setName('play')
+        .setDescription('Play some jams!')
+        .addStringOption(option => 
+            option
+                .setName('url')
+                .setDescription('Url to youtube video!')
+                .setRequired(true)),
     execute: async (interaction) => {
+        
+        const url = interaction.options.getString('url');
+        console.log(`Received YT url - ${url}`);
+        const auidoFilePath = await downloadVideo(url);
+        console.log(`Saved at path - ${auidoFilePath}`)
+
         const connection = joinVoiceChannel({
             channelId: interaction.channelId,
             guildId: interaction.guild.id,
             adapterCreator: interaction.guild.voiceAdapterCreator,
-            debug: true,
         });
 
         const player = createAudioPlayer();
-        const resource = createAudioResource('W:\\Workpalce\\GachiPlayer\\audioTrack.mp4');
+        const resource = createAudioResource(auidoFilePath);
         
-
         connection.on(VoiceConnectionStatus.Connecting, (oldState, newState) => {
             console.log('Connection trying to connect voice chat...');
         });
@@ -63,28 +73,12 @@ let HeroicCommand = {
         player.on('error', error => {
             console.error('Error: ${error.message} with resource');
         })
-        if (subscription) {
-            // Unsubscribe after 5 seconds (stop playing audio on the voice connection)
-            setTimeout(() => subscription.unsubscribe(), 5_000);
-        }
-        await interaction.reply('Oh my shoulder!');
+        // if (subscription) {
+        //     // Unsubscribe after 5 seconds (stop playing audio on the voice connection)
+        //     setTimeout(() => subscription.unsubscribe(), 5_000);
+        // }
+        await interaction.reply('Playing now!');
     },
 };
-const getCircularReplacer = () => {
-    const seen = new WeakSet();
-    return (key, value) => {
-      if (typeof value === "object" && value !== null) {
-        if (seen.has(value)) {
-          return;
-        }
-        seen.add(value);
-      }
-      if(typeof value === 'bigint')
-      {
-        return value.toString();
-      }
-      return value;
-    };
-  };
 
-export { TestCommand, HeroicCommand };
+export { PingCommand, PlayMusicCommand };

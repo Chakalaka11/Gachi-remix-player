@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import 'dotenv/config';
-import { HeroicCommand, TestCommand } from './commands/commands.js';
+import { PingCommand, PlayMusicCommand } from './commands/commands.js';
 
 const commands = [];
 
@@ -12,8 +12,8 @@ function RegisterCommand(command) {
 	}
 }
 
-RegisterCommand(HeroicCommand);
-RegisterCommand(TestCommand);
+RegisterCommand(PingCommand);
+RegisterCommand(PlayMusicCommand);
 
 console.log(process.env.DISCORD_TOKEN);
 const rest = new REST().setToken(process.env.DISCORD_TOKEN);
