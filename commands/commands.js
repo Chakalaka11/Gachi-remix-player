@@ -23,7 +23,7 @@ let HeroicCommand = {
         });
 
         const player = createAudioPlayer();
-        const resource = createAudioResource('W:\\Workpalce\\GachiPlayer\\sample.mp3');
+        const resource = createAudioResource('W:\\Workpalce\\GachiPlayer\\audioTrack.mp4');
         
 
         connection.on(VoiceConnectionStatus.Connecting, (oldState, newState) => {
@@ -63,10 +63,10 @@ let HeroicCommand = {
         player.on('error', error => {
             console.error('Error: ${error.message} with resource');
         })
-        // if (subscription) {
-        //     // Unsubscribe after 5 seconds (stop playing audio on the voice connection)
-        //     setTimeout(() => subscription.unsubscribe(), 5_000);
-        // }
+        if (subscription) {
+            // Unsubscribe after 5 seconds (stop playing audio on the voice connection)
+            setTimeout(() => subscription.unsubscribe(), 5_000);
+        }
         await interaction.reply('Oh my shoulder!');
     },
 };
