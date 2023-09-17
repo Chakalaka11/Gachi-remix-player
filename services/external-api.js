@@ -12,7 +12,6 @@ const downloadVideo = async (videoUrl) => {
 
     let info = await ytdl.getInfo(videoUrl, options);
     let audioFormats = ytdl.filterFormats(info.formats, 'audioonly');
-    console.log('Formats with only audio: ' + audioFormats.length);
     console.log('Trying to download media...');
 
     for (let i = 0; i < supportedAudioFormats.length; i++) {
