@@ -1,6 +1,6 @@
 import { REST, Routes } from 'discord.js';
 import 'dotenv/config';
-import { PingCommand, PlayMusicCommand } from './commands/commands.js';
+import { PingCommand, PlayMusicCommand, SkipCommand } from './commands/commands.js';
 
 const commands = [];
 
@@ -12,6 +12,7 @@ function RegisterCommand(command) {
 	}
 }
 
+RegisterCommand(SkipCommand);
 RegisterCommand(PingCommand);
 RegisterCommand(PlayMusicCommand);
 

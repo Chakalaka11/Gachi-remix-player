@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, Collection } from 'discord.js';
 import 'dotenv/config';
-import { PingCommand, PlayMusicCommand } from './commands/commands.js';
+import { PingCommand, PlayMusicCommand, SkipCommand } from './commands/commands.js';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'], });
 client.commands = new Collection();
@@ -14,6 +14,7 @@ function RegisterCommand(command) {
 }
 
 RegisterCommand(PingCommand);
+RegisterCommand(SkipCommand);
 RegisterCommand(PlayMusicCommand);
 
 client.once(Events.ClientReady, c => {

@@ -1,37 +1,7 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, AudioPlayerStatus, entersState, getVoiceConnection } from '@discordjs/voice';
 import { downloadVideo } from '../services/external-api.js';
-
-let songQueue = [];
-let currentSong = "";
-let player = createAudioPlayer();
-
-player.on('error', error => {
-    console.error('Error: ${error.message} with resource');
-});
-
-player.on(AudioPlayerStatus.Playing, (oldState, newState) => {
-    console.log('Audio player is in the Playing state!');
-});
-
-player.on(AudioPlayerStatus.Idle, (oldState, newState) => {
-    console.log('[PLAYER] Audio has ended, changing track...');
-
-    var newSong = songQueue.shift();
-    if(newSong !== undefined)
-    {
-        currentSong = newSong;
-        const resource = createAudioResource(currentSong);
-        player.play(resource);
-        console.log('[PLAYER] Playing new track.');
-    }
-    else
-    {
-        currentSong = "";
-        console.log('[PLAYER] There is no songs to play.');
-    }
-    
-});
+import { AudioPlayer } from '../services/audio-player.js'
 
 let PlayMusicCommand = {
     data: new SlashCommandBuilder()
@@ -62,22 +32,8 @@ let PlayMusicCommand = {
             return null;
         }
 
-
-        // Add to queue
-        if (currentSong === "") {
-            // If there is no songs - play right now
-            currentSong = auidoFilePath;
-            
-            connection.subscribe(player);
-            const resource = createAudioResource(currentSong);
-            player.play(resource);
-            await interaction.reply('Playing now!');
-        }
-        else
-        {
-            songQueue.push(auidoFilePath);
-            await interaction.reply('Added to queue!');
-        }
+        AudioPlayer.addSong(auidoFilePath, interaction.guild.id, connection);
+        await interaction.reply('Playing now!');
     },
 };
 
