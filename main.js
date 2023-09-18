@@ -1,6 +1,6 @@
 import { Client, Events, GatewayIntentBits, Collection } from 'discord.js';
 import 'dotenv/config';
-import { PingCommand, PlayMusicCommand, SkipCommand } from './commands/commands.js';
+import { PingCommand, PlayMusicCommand, SkipCommand, RepeatCommand } from './commands/commands.js';
 
 const client = new Client({ intents: [GatewayIntentBits.Guilds, 'GuildVoiceStates'], });
 client.commands = new Collection();
@@ -16,6 +16,7 @@ function RegisterCommand(command) {
 RegisterCommand(PingCommand);
 RegisterCommand(SkipCommand);
 RegisterCommand(PlayMusicCommand);
+RegisterCommand(RepeatCommand);
 
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);

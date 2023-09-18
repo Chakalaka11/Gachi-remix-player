@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { joinVoiceChannel, createAudioPlayer, createAudioResource, VoiceConnectionStatus, AudioPlayerStatus, entersState, getVoiceConnection } from '@discordjs/voice';
+import { joinVoiceChannel, VoiceConnectionStatus, entersState } from '@discordjs/voice';
 import { downloadVideo } from '../services/external-api.js';
 import { AudioPlayer } from '../services/audio-player.js'
 
