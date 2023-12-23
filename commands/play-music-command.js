@@ -33,7 +33,7 @@ let PlayMusicCommand = {
         }
 
         AudioPlayer.addSong(auidoFilePath, interaction.guild.id, connection);
-        await interaction.reply('Playing now!');
+        await interaction.reply('Playing now!' + url);
     },
 };
 
