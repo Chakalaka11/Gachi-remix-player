@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
 import { joinVoiceChannel, VoiceConnectionStatus, entersState } from '@discordjs/voice';
-import { downloadVideo } from '../services/external-api.js';
 import { AudioPlayer } from '../services/audio-player.js'
 
 let PlayMusicCommand = {
@@ -16,7 +15,6 @@ let PlayMusicCommand = {
 
         const url = interaction.options.getString('url');
         console.log(`[PLAY COMMAND] Received YT url - ${url}`);
-        const auidoFilePath = await downloadVideo(url);
 
         const connection = joinVoiceChannel({
             channelId: interaction.channelId,
@@ -32,7 +30,7 @@ let PlayMusicCommand = {
             return null;
         }
 
-        AudioPlayer.addSong(auidoFilePath, interaction.guild.id, connection);
+        await AudioPlayer.addSong(url, interaction.guild.id, connection);
         await interaction.reply('Playing now!' + url);
     },
 };

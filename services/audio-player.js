@@ -1,11 +1,12 @@
 import { createAudioPlayer, createAudioResource, AudioPlayerStatus } from '@discordjs/voice';
+import { downloadVideo } from './external-api.js';
 
 let songQueue = [];
-let currentSong = undefined;
+let currentSongPath = undefined;
 let players = new Map();
 let isSongRepeated = false;
 
-function addSong(auidoFilePath, serverId, serverConnection) {
+async function addSong(audioUrl, serverId, serverConnection) {
     let player = players.get(serverId);
     if (player === undefined) {
         // If there is no player for this server - create it
@@ -19,10 +20,10 @@ function addSong(auidoFilePath, serverId, serverConnection) {
             // Clear audio queue
             console.log('[PLAYER] Clearing queue.');
             songQueue = [];
-            currentSong = undefined;
+            currentSongPath = undefined;
         });
 
-        player.on(AudioPlayerStatus.Idle, (oldState, newState) => {
+        player.on(AudioPlayerStatus.Idle, async (oldState, newState) => {
             console.log('[PLAYER] Audio has ended, changing track...');
             if(isSongRepeated)
             {
@@ -31,9 +32,11 @@ function addSong(auidoFilePath, serverId, serverConnection) {
                 return;
             }
 
-            currentSong = songQueue.shift();
-            if (currentSong !== undefined) {
-                player.play(createAudioResource(currentSong));
+            var nextSong = songQueue.shift();
+            if (nextSong !== undefined) {
+                var songPath = await downloadVideo(nextSong);
+                currentSongPath = songPath;
+                player.play(createAudioResource(songPath));
                 console.log('[PLAYER] Playing new track.');
             }
             else {
@@ -44,13 +47,14 @@ function addSong(auidoFilePath, serverId, serverConnection) {
         players.set(serverId, player);
     }
 
-    if (currentSong) {
-        songQueue.push(auidoFilePath);
+    if (currentSongPath) {
+        songQueue.push(audioUrl);
     }
     else {
-        currentSong = auidoFilePath;
+        var songPath = await downloadVideo(audioUrl);
+        currentSongPath = songPath;
         serverConnection.subscribe(player);
-        player.play(createAudioResource(currentSong));
+        player.play(createAudioResource(currentSongPath));
     }
 }
 
