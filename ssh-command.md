@@ -2,7 +2,7 @@
 
 1. Login into server:
 ```shell 
-ssh -i E:\Workplace\gachi-player-ssh\vm-key.pem gachi-admin@20.123.92.119
+ssh -i E:\Workplace\gachi-player-ssh\vm-key.pem gachi-admin@<IP>
 ```
 2. Navigate to bot's folder
 3. Run it using `nohup`. For example:
@@ -17,7 +17,7 @@ nohup node main.js
 
 Use this command to update it:
 ```shell
-scp -r -i E:\Workplace\gachi-player-ssh\vm-key.pem E:\Workplace\GachiPlayer\ gachi-admin@20.123.92.119:gachi-player 
+scp -r -i E:\Workplace\gachi-player-ssh\vm-key.pem E:\Workplace\GachiPlayer\ gachi-admin@<IP>:gachi-player 
 ```
 
 ## For new ssh keys 
