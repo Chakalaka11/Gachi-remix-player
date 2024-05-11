@@ -25,23 +25,34 @@ async function addSong(audioUrl, serverId, serverConnection) {
 
         player.on(AudioPlayerStatus.Idle, async (oldState, newState) => {
             console.log('[PLAYER] Audio has ended, changing track...');
-            if(isSongRepeated)
-            {
+
+            if (isSongRepeated) {
                 console.log('[PLAYER] Repeat enabled, playing the same track.');
-                player.play(createAudioResource(currentSong));
+                player.play(createAudioResource(currentSongPath));
                 return;
             }
+           
+            currentSongPath = undefined;
+            var songPath = null;
 
-            var nextSong = songQueue.shift();
-            if (nextSong !== undefined) {
-                var songPath = await downloadVideo(nextSong);
-                currentSongPath = songPath;
-                player.play(createAudioResource(songPath));
-                console.log('[PLAYER] Playing new track.');
-            }
-            else {
-                console.log('[PLAYER] There is no songs to play.');
-            }
+            do {
+                var nextSong = songQueue.shift();
+
+                if (nextSong === undefined) {
+                    console.log('[PLAYER] There is no songs to play.');
+                    return;
+                }
+                songPath = await downloadVideo(nextSong);
+
+                if (!songPath) {
+                    console.log('[PLAYER] Can\'t download video, skipping...');
+                }
+
+            } while (songPath == null);
+
+            currentSongPath = songPath;
+            player.play(createAudioResource(songPath));
+            console.log('[PLAYER] Playing new track.');
         });
 
         players.set(serverId, player);
@@ -52,6 +63,12 @@ async function addSong(audioUrl, serverId, serverConnection) {
     }
     else {
         var songPath = await downloadVideo(audioUrl);
+
+        if (!songPath) {
+            console.log('[PLAYER] Can\'t download video, skipping...');
+            return;
+        }
+
         currentSongPath = songPath;
         serverConnection.subscribe(player);
         player.play(createAudioResource(currentSongPath));
@@ -67,7 +84,7 @@ function skipSong(serverId) {
     isSongRepeated = false;
 }
 
-function repeatSong(){
+function repeatSong() {
     isSongRepeated = !isSongRepeated;
     return isSongRepeated;
 }

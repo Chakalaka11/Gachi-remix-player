@@ -5,7 +5,7 @@ let PingCommand = {
         .setName('ping')
         .setDescription('To verify if everything is working.'),
     execute: async (interaction) => {
-        await interaction.reply('Oh my shoulder!');
+        await interaction.reply('Oh my shoulder! v04.23');
     }
 };
 
