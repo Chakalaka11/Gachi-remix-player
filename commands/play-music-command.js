@@ -30,9 +30,8 @@ let PlayMusicCommand = {
             return null;
         }
 
-        await interaction.reply('Processing command...');
         await AudioPlayer.addSong(url, interaction.guild.id, connection);
-        await interaction.editReply('Playing now! - ' + url);
+        await interaction.reply('Playing now! - ' + url);
     },
 };
 
