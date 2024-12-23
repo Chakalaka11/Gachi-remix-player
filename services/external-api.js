@@ -1,16 +1,12 @@
 import fs from 'fs';
 import stream from 'stream';
 import util from 'util';
-<<<<<<< HEAD
-import axios from 'axios';
-=======
-import ytdl from 'ytdl-core';
->>>>>>> parent of 1b470df (Changed External Api to use Cobalt Tools)
+import ytdl from '@distube/ytdl-core';
 
 const pipeline = util.promisify(stream.pipeline);
 
 
-const options = { quality: 'highestaudio' };
+const options = { quality: 'highestaudio', playerClients: ["IOS", "WEB_CREATOR"] };
 const supportedAudioFormats = ['mp4', 'mp3'];
 const defaultFolder = './AudioFiles'
 
@@ -45,7 +41,7 @@ const downloadVideo = async (videoUrl, folderPath) => {
                 }
                 let filePath = `${folderToSave}/audioTrack-${info.videoDetails.videoId}.${format}`;
 
-                console.log(`[EXTERNAL API] Saved at ${filePath}`);
+                console.log(`[EXTERNAL API] Trying to save at ${filePath}`);
 
                 // I DON'T HAVE SINGLE FUCKING IDEA HOW THAT WORKED
                 await pipeline(
@@ -61,6 +57,7 @@ const downloadVideo = async (videoUrl, folderPath) => {
         return null;
 
     } catch (error) {
+        console.log(error);
         console.log('[EXTERNAL API] Provided path is not supported, returning null');
         return null;
     }
