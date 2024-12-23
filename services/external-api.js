@@ -2,7 +2,6 @@ import fs from 'fs';
 import stream from 'stream';
 import util from 'util';
 import axios from 'axios';
-import ytdl from '@distube/ytdl-core'
 
 const finished = util.promisify(stream.finished);
 
